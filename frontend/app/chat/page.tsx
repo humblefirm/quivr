@@ -1,30 +1,33 @@
 "use client";
-import axios from "axios";
+import { useBrainConfig } from "@/lib/context/BrainConfigProvider/hooks/useBrainConfig";
+import { useAxios } from "@/lib/useAxios";
+import Link from "next/link";
 import { redirect } from "next/navigation";
 import { useEffect, useState } from "react";
 import { MdMic, MdMicOff, MdSettings } from "react-icons/md";
 import Button from "../components/ui/Button";
 import Card from "../components/ui/Card";
-import Modal from "../components/ui/Modal";
 import PageHeading from "../components/ui/PageHeading";
 import { useSupabase } from "../supabase-provider";
 import ChatMessages from "./ChatMessages";
+import { isSpeechRecognitionSupported } from "./helpers";
 
 export default function ChatPage() {
   const [question, setQuestion] = useState("");
   const [history, setHistory] = useState<Array<[string, string]>>([]);
-  const [model, setModel] = useState("gpt-3.5-turbo");
-  const [temperature, setTemperature] = useState(0);
-  const [maxTokens, setMaxTokens] = useState(500);
   const [isPending, setIsPending] = useState(false);
   const [isListening, setIsListening] = useState(false);
   const { session } = useSupabase();
+  const { axiosInstance } = useAxios();
+  const {
+    config: { maxTokens, model, temperature },
+  } = useBrainConfig();
   if (session === null) {
     redirect("/login");
   }
 
   useEffect(() => {
-    if (typeof window !== "undefined") {
+    if (isSpeechRecognitionSupported()) {
       const SpeechRecognition =
         window.SpeechRecognition || window.webkitSpeechRecognition;
 
@@ -69,21 +72,14 @@ export default function ChatPage() {
     setHistory((hist) => [...hist, ["user", question]]);
     setIsPending(true);
     setIsListening(false);
-    const response = await axios.post(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/chat/`,
-      {
-        model,
-        question,
-        history,
-        temperature,
-        max_tokens: maxTokens,
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${session.access_token}`,
-        },
-      }
-    );
+
+    const response = await axiosInstance.post(`/chat/`, {
+      model,
+      question,
+      history,
+      temperature,
+      max_tokens: maxTokens,
+    });
     setHistory(response.data.history);
     setQuestion("");
     setIsPending(false);
@@ -128,6 +124,7 @@ export default function ChatPage() {
                 variant={"tertiary"}
                 type="button"
                 onClick={handleListen}
+                disabled={!isSpeechRecognitionSupported()}
               >
                 {isListening ? (
                   <MdMicOff className="text-2xl" />
@@ -135,65 +132,11 @@ export default function ChatPage() {
                   <MdMic className="text-2xl" />
                 )}
               </Button>
-              {/* Settings Button */}
-              <Modal
-                Trigger={
-                  <Button className="px-3" variant={"tertiary"}>
-                    <MdSettings className="text-2xl" />
-                  </Button>
-                }
-                title="Settings"
-                desc="Modify your brain"
-              >
-                <form className="flex flex-col gap-5 py-5">
-                  <fieldset className="w-full flex">
-                    <label className="flex-1" htmlFor="model">
-                      Model:
-                    </label>
-                    <select
-                      name="model"
-                      id="model"
-                      value={model}
-                      className="px-5 py-2 dark:bg-gray-700 bg-gray-200 rounded-md"
-                      onChange={(e) => setModel(e.target.value)}
-                    >
-                      <option value="gpt-3.5-turbo">gpt-3.5-turbo</option>
-                      <option value="gpt-4">gpt-4</option>
-                      <option value="vertexai">vertexai</option>
-                    </select>
-                  </fieldset>
-                  <fieldset className="w-full flex">
-                    <label className="flex-1" htmlFor="temp">
-                      Temperature: {temperature}
-                    </label>
-                    <input
-                      name="temp"
-                      id="temp"
-                      type="range"
-                      min="0"
-                      max="1"
-                      step="0.01"
-                      value={temperature}
-                      onChange={(e) => setTemperature(+e.target.value)}
-                    />
-                  </fieldset>
-                  <fieldset className="w-full flex">
-                    <label className="flex-1" htmlFor="tokens">
-                      Tokens: {maxTokens}
-                    </label>
-                    <input
-                      name="tokens"
-                      id="tokens"
-                      type="range"
-                      min="256"
-                      max="3000"
-                      step="1"
-                      value={maxTokens}
-                      onChange={(e) => setMaxTokens(+e.target.value)}
-                    />
-                  </fieldset>
-                </form>
-              </Modal>
+              <Link href={"/config"}>
+                <Button className="px-3" variant={"tertiary"}>
+                  <MdSettings className="text-2xl" />
+                </Button>
+              </Link>
             </form>
           </Card>
         </Card>
