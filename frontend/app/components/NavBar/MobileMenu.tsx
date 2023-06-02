@@ -34,7 +34,7 @@ const MobileMenu: FC = () => {
                     <p className="">
                       Get a Second Brain with{" "}
                       <span className="text-primary dark:bg-white rounded-sm">
-                        Quivr
+                        Prometheus
                       </span>
                     </p>
 

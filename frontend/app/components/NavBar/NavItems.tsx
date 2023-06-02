@@ -13,7 +13,7 @@ interface NavItemsProps extends HTMLAttributes<HTMLUListElement> {
 const NavItems: FC<NavItemsProps> = ({ className, setOpen, ...props }) => {
   const { session } = useSupabase();
   const isUserLoggedIn = session?.user !== undefined;
-  const isLocal = (process.env.NEXT_PUBLIC_ENV === "local") || (session !== null);
+  const isLocal = process.env.NEXT_PUBLIC_ENV === "local" || session !== null;
   return (
     <ul
       className={cn(
@@ -36,7 +36,10 @@ const NavItems: FC<NavItemsProps> = ({ className, setOpen, ...props }) => {
         </>
       ) : (
         <>
-          <NavLink setOpen={setOpen} to="https://github.com/StanGirard/quivr">
+          <NavLink
+            setOpen={setOpen}
+            to="https://github.com/StanGirard/prometheus"
+          >
             Github
           </NavLink>
           <NavLink setOpen={setOpen} to="https://discord.gg/HUpRgp2HG8">
@@ -51,7 +54,7 @@ const NavItems: FC<NavItemsProps> = ({ className, setOpen, ...props }) => {
           </Link>
         )}
         {!isLocal && (
-          <Link href={"https://try-quivr.streamlit.app"}>
+          <Link href={"https://try-prometheus.streamlit.app"}>
             <Button variant={"secondary"}>Try Demo</Button>
           </Link>
         )}

@@ -44,7 +44,7 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
-quivr/*
+prometheus/*
 streamlit-demo/.streamlit/secrets.toml
 .backend_env
 .frontend_env

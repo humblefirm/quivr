@@ -3,14 +3,14 @@ import os
 import tempfile
 
 import streamlit as st
-from files import file_uploader, url_uploader
-from question import chat_with_doc
 from brain import brain
+from explorer import view_document
+from files import file_uploader, url_uploader
 from langchain.embeddings.openai import OpenAIEmbeddings
 from langchain.vectorstores import SupabaseVectorStore
-from supabase import Client, create_client
-from explorer import view_document
+from question import chat_with_doc
 from stats import get_usage_today
+from supabase import Client, create_client
 
 supabase_url = st.secrets.supabase_url
 supabase_key = st.secrets.supabase_service_key
@@ -29,16 +29,16 @@ if anthropic_api_key:
 
 # Set the theme
 st.set_page_config(
-    page_title="Quivr",
+    page_title="Prometheus",
     layout="wide",
     initial_sidebar_state="expanded",
 )
 
 
-st.title("🧠 Quivr - Your second brain 🧠")
+st.title("🧠 Prometheus - Your second brain 🧠")
 st.markdown("Store your knowledge in a vector store and query it with OpenAI's GPT-3/4.")
 if self_hosted == "false":
-    st.markdown('**📢 Note: In the public demo, access to functionality is restricted. You can only use the GPT-3.5-turbo model and upload files up to 1Mb. To use more models and upload larger files, consider self-hosting Quivr.**')
+    st.markdown('**📢 Note: In the public demo, access to functionality is restricted. You can only use the GPT-3.5-turbo model and upload files up to 1Mb. To use more models and upload larger files, consider self-hosting Prometheus.**')
 
 st.markdown("---\n\n")
 

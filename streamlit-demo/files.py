@@ -1,34 +1,25 @@
 import os
-from typing import (
-    Any,
-    Union,
-)
 import zipfile
+from typing import Any, Union
+
 import streamlit as st
-from streamlit.runtime.uploaded_file_manager import (
-    UploadedFile,
-    UploadedFileRec,
-    UploadedFileManager,
-)
-from streamlit.runtime.scriptrunner import get_script_run_ctx
-from supabase.client import Client
-from langchain.vectorstores.supabase import SupabaseVectorStore
 from components_keys import ComponentsKeys
+from langchain.vectorstores.supabase import SupabaseVectorStore
 from loaders.audio import process_audio
-from loaders.txt import process_txt
 from loaders.csv import process_csv
+from loaders.docx import process_docx
+from loaders.html import (create_html_file, delete_tempfile, get_html,
+                          process_html)
 from loaders.markdown import process_markdown
 from loaders.pdf import process_pdf
-from loaders.html import (
-    create_html_file,
-    delete_tempfile,
-    get_html,
-    process_html,
-)
 from loaders.powerpoint import process_powerpoint
-from loaders.docx import process_docx
+from loaders.txt import process_txt
+from streamlit.runtime.scriptrunner import get_script_run_ctx
+from streamlit.runtime.uploaded_file_manager import (UploadedFile,
+                                                     UploadedFileManager,
+                                                     UploadedFileRec)
+from supabase.client import Client
 from utils import compute_sha1_from_content
-
 
 ctx = get_script_run_ctx()
 manager = UploadedFileManager()
@@ -170,7 +161,7 @@ def filter_file(file, supabase, vector_store):
     return False
 
 def url_uploader(supabase, vector_store):
-    url = st.text_area("**Add an url**",placeholder="https://www.quivr.app")
+    url = st.text_area("**Add an url**",placeholder="https://www.prometheus.app")
     button = st.button("Add the URL to the database")
 
     if button:

@@ -1,10 +1,12 @@
-# Issue template for Quivr - Your Second Brain, Empowered by Generative AI
+# Issue template for Prometheus - Your Second Brain, Empowered by Generative AI
 
 ## Before you submit an issue 🧐
+
 - Make sure you've checked if there are other issues on the same topic.
 - Be sure to check the documentation and read the README.
 
 ## Submitting a Bug Report 🐛
+
 A bug is a demonstrable problem caused by the code in the repository. Good bug reports are extremely helpful!
 
 Guidelines for bug reports:

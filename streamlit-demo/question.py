@@ -1,12 +1,12 @@
 import anthropic
 import streamlit as st
-from streamlit.logger import get_logger
 from langchain.chains import ConversationalRetrievalChain
-from langchain.memory import ConversationBufferMemory
-from langchain.llms import OpenAI
 from langchain.chat_models import ChatAnthropic
+from langchain.llms import OpenAI
+from langchain.memory import ConversationBufferMemory
 from langchain.vectorstores import SupabaseVectorStore
 from stats import add_usage
+from streamlit.logger import get_logger
 
 memory = ConversationBufferMemory(
     memory_key="chat_history", return_messages=True)
@@ -68,7 +68,7 @@ def chat_with_doc(model, vector_store: SupabaseVectorStore, stats_db):
             model_response = qa({"question": question})
             logger.info('Result: %s', model_response)
 
-            st.session_state['chat_history'].append(("Quivr", model_response["answer"]))
+            st.session_state['chat_history'].append(("Prometheus", model_response["answer"]))
 
             # Display chat history
             st.empty()

@@ -35,7 +35,7 @@ app = FastAPI()
 origins = [
     "http://localhost",
     "http://localhost:3000",
-    "https://api.quivr.app"
+    "https://api.prometheus.app"
 ]
 
 app.add_middleware(
